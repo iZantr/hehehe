@@ -1,7 +1,7 @@
 -- Определение основных сервисов
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService") -- Для обновления полоски вручную
+local RunService = game:GetService("RunService") -- Для обновления данных каждую отрисовку кадра
 local Workspace = game:GetService("Workspace")
 
 local player = Players.LocalPlayer
@@ -39,7 +39,7 @@ local mainText = Instance.new("TextLabel")
 mainText.Size = UDim2.new(0, 230, 0, 20) -- Начальный размер текстового поля
 mainText.Position = UDim2.new(0, 60, 0, 5)
 mainText.BackgroundTransparency = 1
-mainText.Text = "[Flashback] Entity 'Rush' detected!"
+mainText.Text = "Flashback: Entity detected!"
 mainText.TextColor3 = Color3.fromRGB(255, 255, 255) -- Белый цвет текста
 mainText.TextSize = 14
 mainText.Font = Enum.Font.GothamSemibold -- Более стильный, не вытянутый шрифт
@@ -73,26 +73,29 @@ notificationSound.SoundId = "rbxassetid://4590657391" -- ID звука
 notificationSound.Volume = 1
 notificationSound.Parent = screenGui
 
+-- Текстовая метка для отображения версии Flashback
+local versionText = Instance.new("TextLabel")
+versionText.Size = UDim2.new(0, 150, 0, 20)
+versionText.Position = UDim2.new(1, -160, 1, -30) -- Позиция в правом нижнем углу
+versionText.BackgroundTransparency = 1
+versionText.Text = "Flashback - 1.0"
+versionText.TextColor3 = Color3.fromRGB(169, 169, 169) -- Серый цвет текста
+versionText.TextSize = 12
+versionText.Font = Enum.Font.SourceSans
+versionText.TextXAlignment = Enum.TextXAlignment.Right
+versionText.Parent = screenGui
+
 -- Переменные для отслеживания состояния
 local isNotificationOpen = false
 local progressTime = 0
 local progressDuration = 5 -- Продолжительность таймера для закрытия уведомления
 local timerStarted = false
 
--- Функция динамического изменения размера уведомления
-local function updateNotificationSize()
-    local totalTextWidth = mainText.TextBounds.X + 60 -- ширина текста + отступы
-    notificationFrame.Size = UDim2.new(0, math.max(300, totalTextWidth), 0, 50) -- расширяем если больше 300
-    mainText.Size = UDim2.new(0, totalTextWidth - 60, 0, 20) -- Подгоняем размер текста
-    subText.Size = UDim2.new(0, totalTextWidth - 80, 0, 20) -- Подгоняем размер текста и добавляем отступ справа
-end
-
 -- Функция отображения уведомления
-local function openNotification(message)
+local function openNotification(entityName)
     if not isNotificationOpen then
         isNotificationOpen = true
-        mainText.Text = message -- Устанавливаем текст уведомления
-        updateNotificationSize() -- Обновляем размер уведомления в зависимости от текста
+        mainText.Text = "Flashback: " .. entityName .. " detected!" -- Устанавливаем текст уведомления
         notificationFrame.Visible = true
         notificationSound:Play() -- Воспроизведение звука
 
@@ -139,9 +142,13 @@ RunService.RenderStepped:Connect(updateTimer)
 
 -- Обработчик появления объектов в Workspace
 Workspace.ChildAdded:Connect(function(child)
-    -- Проверяем, если имя объекта содержит "Rush"
-    if string.find(child.Name:lower(), "rush") then
-        openNotification("[Flashback] Entity 'Rush' detected!") -- Отправляем уведомление при обнаружении Rush
+    local childName = child.Name:lower() -- Приводим к нижнему регистру для удобства
+    if childName == "rush" then
+        openNotification("Rush")
+    elseif childName == "ambush" then
+        openNotification("Ambush")
+    elseif childName == "figure" then
+        openNotification("Figure")
     end
 end)
 
