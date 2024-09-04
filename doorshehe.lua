@@ -39,7 +39,7 @@ local mainText = Instance.new("TextLabel")
 mainText.Size = UDim2.new(0, 230, 0, 20) -- Начальный размер текстового поля
 mainText.Position = UDim2.new(0, 60, 0, 5)
 mainText.BackgroundTransparency = 1
-mainText.Text = "[LOLHAX] Entity 'Rush' detected!"
+mainText.Text = "[Flashback] Entity 'Rush' detected!"
 mainText.TextColor3 = Color3.fromRGB(255, 255, 255) -- Белый цвет текста
 mainText.TextSize = 14
 mainText.Font = Enum.Font.GothamSemibold -- Более стильный, не вытянутый шрифт
@@ -141,7 +141,7 @@ RunService.RenderStepped:Connect(updateTimer)
 Workspace.ChildAdded:Connect(function(child)
     -- Проверяем, если имя объекта содержит "Rush"
     if string.find(child.Name:lower(), "rush") then
-        openNotification("[LOLHAX] Entity 'Rush' detected!") -- Отправляем уведомление при обнаружении Rush
+        openNotification("[Flashback] Entity 'Rush' detected!") -- Отправляем уведомление при обнаружении Rush
     end
 end)
 
